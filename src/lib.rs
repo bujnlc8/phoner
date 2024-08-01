@@ -39,13 +39,22 @@ pub struct RecordData {
 
 impl RecordData {
     pub fn display(&self) {
-        println!(
-            "{} {}{} {}",
-            format!("[{}]", self.area_code).magenta(),
-            self.province.green(),
-            self.city.green(),
-            self.isp.red().bold()
-        );
+        if self.province != self.city {
+            println!(
+                "{} {}{} {}",
+                format!("[{}]", self.area_code).magenta(),
+                self.province.green(),
+                self.city.green(),
+                self.isp.red().bold()
+            );
+        } else {
+            println!(
+                "{} {} {}",
+                format!("[{}]", self.area_code).magenta(),
+                self.province.green(),
+                self.isp.red().bold()
+            );
+        }
     }
 }
 
@@ -166,6 +175,9 @@ impl PhoneData {
             let prefix = &self.index[mid * 9..(mid * 9 + 4)];
             let prefix = u8_i32(prefix);
             if prefix > phone_prefix {
+                if mid == 0 {
+                    break;
+                }
                 end = mid - 1;
             } else if prefix == phone_prefix {
                 position = Some(mid);
