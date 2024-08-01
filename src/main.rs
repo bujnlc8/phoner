@@ -2,7 +2,7 @@ use std::{process::exit, time};
 
 use clap::{CommandFactory, Parser};
 use colored::Colorize;
-use phoner::{util::wait_blink, PhoneData};
+use phonerr::{util::wait_blink, PhoneData};
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]

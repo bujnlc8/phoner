@@ -1,5 +1,5 @@
 [package]
-name = "phoner"
+name = "phonerr"
 version = "0.1.0"
 edition = "2021"
 description = "A CLI to query mobile region."
@@ -7,6 +7,10 @@ readme = "README.md"
 license = "MIT"
 repository = "https://github.com/bujnlc8/phoner"
 categories = ["command-line-utilities"]
+
+[[bin]]
+name = "phoner"
+path = "./src/main.rs"
 
 [dependencies]
 anyhow = "1.0.86"
