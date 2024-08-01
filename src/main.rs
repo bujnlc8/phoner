@@ -8,17 +8,21 @@ use phonerr::{util::wait_blink, PhoneData};
 #[command(version, about, long_about = None)]
 #[command(propagate_version = true)]
 struct Cli {
-    /// 更新手机号码库
-    #[clap(long, conflicts_with_all = vec!["db_info"])]
+    /// 更新号码库
+    #[clap(long, conflicts_with_all = vec!["info"])]
     update: bool,
 
-    /// 更新手机号码库链接，默认 https://raw.githubusercontent.com/ls0f/phone/master/phone/phone.dat
+    /// 更新号码库链接，默认 https://raw.githubusercontent.com/ls0f/phone/master/phone/phone.dat
     #[clap(long)]
     update_url: Option<String>,
 
-    /// 查看手机号码库信息
+    /// 查看号码库信息
     #[clap(long, conflicts_with_all = vec!["update", "update_url"])]
-    db_info: bool,
+    info: bool,
+
+    /// 不显示elapsed time
+    #[clap(long)]
+    no_elapsed_time: bool,
 
     /// 手机号码
     phone: Option<String>,
@@ -26,15 +30,15 @@ struct Cli {
 
 #[tokio::main]
 async fn main() -> Result<(), anyhow::Error> {
+    let start = time::Instant::now();
     let cli = Cli::parse();
-    if cli.phone.is_some() && cli.phone.clone().unwrap().len() != 11 {
+    if cli.phone.is_some() && cli.phone.clone().unwrap().replace(" ", "").len() != 11 {
         eprintln!("{}", "手机号码格式错误".red());
         exit(1);
     }
     let mut client = PhoneData::new(None);
     if cli.update {
-        let start = time::Instant::now();
-        let wait = wait_blink("正在下载...", 3);
+        let wait = wait_blink("下载中，请稍候⏬...", 3);
         client.download_file(cli.update_url).await?;
         wait.sender.send(true).unwrap();
         wait.handle.await?;
@@ -45,7 +49,7 @@ async fn main() -> Result<(), anyhow::Error> {
         );
         return Ok(());
     }
-    if cli.db_info {
+    if cli.info {
         client.print_db_info().await?;
         return Ok(());
     }
@@ -53,8 +57,10 @@ async fn main() -> Result<(), anyhow::Error> {
         Cli::command().print_help().unwrap();
         exit(0);
     }
-    let wait = wait_blink("正在查询，请稍候🔎...", 3);
-    let record = client.query(&cli.phone.unwrap(), true).await;
+    let wait = wait_blink("查询中，请稍候🔎...", 3);
+    let record = client
+        .query(&cli.phone.unwrap().replace(" ", ""), true)
+        .await;
     wait.sender.send(true).unwrap();
     wait.handle.await?;
     match record {
@@ -63,6 +69,12 @@ async fn main() -> Result<(), anyhow::Error> {
             exit(1)
         }
         Ok(data) => data.display(),
+    }
+    if !cli.no_elapsed_time {
+        println!(
+            "{}",
+            format!("{}ms elapsed.", start.elapsed().as_millis()).bright_black()
+        );
     }
     Ok(())
 }

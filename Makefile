@@ -3,7 +3,7 @@ test:
 
 
 PLATFORMS:=x86_64-apple-darwin x86_64-unknown-linux-gnu x86_64-unknown-linux-musl aarch64-apple-darwin
-VERSION:=0.1.0
+VERSION:=0.1.1
 CLI:=phoner
 HOST_TRIPLE := $(shell rustc -vV | grep 'host:' | awk '{print $$2}')
 
