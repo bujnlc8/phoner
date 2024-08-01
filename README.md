@@ -12,15 +12,15 @@
 
   > [phoner_x86_64-apple-darwin.tar.gz.md5](https://github.com/bujnlc8/phoner/releases/download/0.1.0/phoner_x86_64-apple-darwin.tar.gz.md5)
 
-- [⬇️ 点击下载 aarch64-apple-darwin](https://github.com/bujnlc8/phoner/release/download/0.1.0/phoner_aarch64-apple-darwin.tar.gz)
+- [⬇️ 点击下载 aarch64-apple-darwin](https://github.com/bujnlc8/phoner/releases/download/0.1.0/phoner_aarch64-apple-darwin.tar.gz)
 
   > [phoner_aarch64-apple-darwin.tar.gz.md5](https://github.com/bujnlc8/phoner/releases/download/0.1.0/phoner_aarch64-apple-darwin.tar.gz.md5)
 
-- [⬇️ 点击下载 x86_64-unknown-linux-musl](https://github.com/bujnlc8/phoner/release/download/0.1.0/phoner_x86_64-unknown-linux-musl.tar.gz)
+- [⬇️ 点击下载 x86_64-unknown-linux-musl](https://github.com/bujnlc8/phoner/releases/download/0.1.0/phoner_x86_64-unknown-linux-musl.tar.gz)
 
   > [phoner_x86_64-unknown-linux-musl.tar.gz.md5](https://github.com/bujnlc8/phoner/releases/download/0.1.0/phoner_x86_64-unknown-linux-musl.tar.gz.md5)
 
-- ~~[⬇️ 点击下载 x86_64-unknown-linux-gnu](https://github.com/bujnlc8/phoner/release/download/0.1.0/phoner_x86_64-unknown-linux-gnu.tar.gz)~~
+- ~~[⬇️ 点击下载 x86_64-unknown-linux-gnu](https://github.com/bujnlc8/phoner/releases/download/0.1.0/phoner_x86_64-unknown-linux-gnu.tar.gz)~~
 
   > ~~[phoner_x86_64-unknown-linux-gnu.tar.gz.md5](https://github.com/bujnlc8/phoner/releases/download/0.1.0/phoner_x86_64-unknown-linux-gnu.tar.gz.md5)~~
 
