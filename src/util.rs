@@ -1,4 +1,5 @@
 #![allow(deprecated)]
+#![allow(unused_imports)]
 
 use colored::Colorize;
 
@@ -67,8 +68,8 @@ pub fn wait_blink(msg: &str, blink_char_num: usize) -> WaitBlinker {
     WaitBlinker { sender: tx, handle }
 }
 
-// 下载文件
-pub async fn download_file(download_url: &str, dest: &Path) -> Result<(), anyhow::Error> {
+// 静默下载
+pub async fn download_file_silent(download_url: &str, dest: &Path) -> Result<(), anyhow::Error> {
     let response = reqwest::get(download_url).await?;
     let dest_dir = dest.parent().unwrap();
     if !dest_dir.exists() {
@@ -82,10 +83,59 @@ pub async fn download_file(download_url: &str, dest: &Path) -> Result<(), anyhow
     Ok(())
 }
 
+// 下载文件
+#[cfg(not(feature = "download-progress"))]
+pub async fn download_file(download_url: &str, dest: &Path) -> Result<(), anyhow::Error> {
+    download_file_silent(download_url, dest).await
+}
+
 pub fn replace_home(p: &str) -> String {
     if p.starts_with('~') {
         let home = env::home_dir().unwrap();
         return p.replace("~", home.to_str().unwrap());
     }
     p.to_string()
+}
+
+#[cfg(feature = "download-progress")]
+pub async fn download_file(download_url: &str, dest: &Path) -> Result<(), anyhow::Error> {
+    use std::time;
+
+    use indicatif::{ProgressBar, ProgressStyle};
+    use tokio::io::AsyncWriteExt;
+    let start = time::Instant::now();
+    let mut response = reqwest::Client::new().get(download_url).send().await?;
+    let total_size = response.content_length().unwrap();
+    let pb = ProgressBar::new(total_size);
+    pb.set_style(ProgressStyle::default_bar().template("{spinner:.green} [{elapsed_precise}] [{bar:50.cyan/blue}] {bytes}/{total_bytes} ({eta})").unwrap().progress_chars("#>-"));
+    pb.clone().with_elapsed(start.elapsed());
+    let dest_dir = dest.parent().unwrap();
+    if !dest_dir.exists() {
+        fs::create_dir_all(dest_dir).await?;
+    }
+    let mut file = fs::File::create(dest).await?;
+    while let Some(chunk) = response.chunk().await? {
+        pb.inc(chunk.len() as u64);
+        file.write(&chunk).await?;
+    }
+    pb.finish();
+    Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+
+    use std::path::Path;
+
+    use super::download_file;
+
+    #[tokio::test]
+    async fn download_file_with_progress_test() -> Result<(), anyhow::Error> {
+        download_file(
+            "https://raw.githubusercontent.com/ls0f/phone/master/phone/phone.dat",
+            Path::new("./phone.dat").as_ref(),
+        )
+        .await?;
+        Ok(())
+    }
 }

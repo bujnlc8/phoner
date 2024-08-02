@@ -38,15 +38,19 @@ async fn main() -> Result<(), anyhow::Error> {
     }
     let mut client = PhoneData::new(None);
     if cli.update {
+        #[cfg(not(feature = "download-progress"))]
         let wait = wait_blink("下载中，请稍候⏬...", 3);
-        client.download_file(cli.update_url).await?;
-        wait.sender.send(true).unwrap();
-        wait.handle.await?;
-        println!(
-            "{} {}",
-            "下载完成 ✅".green(),
-            format!("{}ms elapsed.", start.elapsed().as_millis()).bright_black()
-        );
+        client.download_file(cli.update_url, false).await?;
+        #[cfg(not(feature = "download-progress"))]
+        {
+            wait.sender.send(true).unwrap();
+            wait.handle.await?;
+            println!(
+                "{} {}",
+                "下载完成 ✅".green(),
+                format!("{}ms elapsed.", start.elapsed().as_millis()).bright_black()
+            );
+        }
         return Ok(());
     }
     if cli.info {

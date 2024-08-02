@@ -1,6 +1,6 @@
 pub mod util;
 
-use std::{fmt::Debug, os::unix::fs::MetadataExt, path::PathBuf};
+use std::{cmp::Ordering, fmt::Debug, os::unix::fs::MetadataExt, path::PathBuf};
 
 use anyhow::anyhow;
 use colored::Colorize;
@@ -8,7 +8,7 @@ use tokio::{
     fs::{self, File},
     io::{AsyncReadExt, AsyncSeekExt},
 };
-use util::{download_file, replace_home, u8_i32};
+use util::{download_file, download_file_silent, replace_home, u8_i32};
 
 #[derive(Debug)]
 pub struct PhoneData {
@@ -120,21 +120,33 @@ impl PhoneData {
         replace_home("~/.cache/phoner/phone.dat")
     }
 
-    pub async fn download_file(&self, download_url: Option<String>) -> Result<(), anyhow::Error> {
+    pub async fn download_file(
+        &self,
+        download_url: Option<String>,
+        silent: bool,
+    ) -> Result<(), anyhow::Error> {
         if !self.data_path.parent().unwrap().exists() {
             fs::create_dir_all(self.data_path.parent().unwrap()).await?;
         }
-        download_file(
-            download_url.unwrap_or(PHONE_DATA_URL.to_string()).as_str(),
-            &PathBuf::from(Self::get_data_path()),
-        )
-        .await?;
+        if silent {
+            download_file_silent(
+                download_url.unwrap_or(PHONE_DATA_URL.to_string()).as_str(),
+                &PathBuf::from(Self::get_data_path()),
+            )
+            .await?;
+        } else {
+            download_file(
+                download_url.unwrap_or(PHONE_DATA_URL.to_string()).as_str(),
+                &PathBuf::from(Self::get_data_path()),
+            )
+            .await?;
+        }
         Ok(())
     }
 
     async fn init(&mut self) -> Result<(), anyhow::Error> {
         if !self.data_path.exists() {
-            self.download_file(None).await?;
+            self.download_file(None, true).await?;
         }
         let mut file = File::open(self.data_path.clone()).await?;
         // 读取头部8个字节 版本号, 第一个索引的偏移
@@ -174,16 +186,20 @@ impl PhoneData {
             // 前4位为手机号
             let prefix = &self.index[mid * 9..(mid * 9 + 4)];
             let prefix = u8_i32(prefix);
-            if prefix > phone_prefix {
-                if mid == 0 {
+            match prefix.cmp(&phone_prefix) {
+                Ordering::Greater => {
+                    if mid == 0 {
+                        break;
+                    }
+                    end = mid - 1;
+                }
+                Ordering::Equal => {
+                    position = Some(mid);
                     break;
                 }
-                end = mid - 1;
-            } else if prefix == phone_prefix {
-                position = Some(mid);
-                break;
-            } else {
-                start = mid + 1;
+                Ordering::Less => {
+                    start = mid + 1;
+                }
             }
             if start > end {
                 break;

@@ -8,21 +8,21 @@
 
 ## 下载
 
-- [⬇️ 点击下载 x86_64-apple-darwin](https://github.com/bujnlc8/phoner/releases/download/0.1.1/phoner_x86_64-apple-darwin.tar.gz)
+- [⬇️ 点击下载 x86_64-apple-darwin](https://github.com/bujnlc8/phoner/releases/download/0.1.2/phoner_x86_64-apple-darwin.tar.gz)
 
-  > [phoner_x86_64-apple-darwin.tar.gz.md5](https://github.com/bujnlc8/phoner/releases/download/0.1.1/phoner_x86_64-apple-darwin.tar.gz.md5)
+  > [phoner_x86_64-apple-darwin.tar.gz.md5](https://github.com/bujnlc8/phoner/releases/download/0.1.2/phoner_x86_64-apple-darwin.tar.gz.md5)
 
-- [⬇️ 点击下载 aarch64-apple-darwin](https://github.com/bujnlc8/phoner/releases/download/0.1.1/phoner_aarch64-apple-darwin.tar.gz)
+- [⬇️ 点击下载 aarch64-apple-darwin](https://github.com/bujnlc8/phoner/releases/download/0.1.2/phoner_aarch64-apple-darwin.tar.gz)
 
-  > [phoner_aarch64-apple-darwin.tar.gz.md5](https://github.com/bujnlc8/phoner/releases/download/0.1.1/phoner_aarch64-apple-darwin.tar.gz.md5)
+  > [phoner_aarch64-apple-darwin.tar.gz.md5](https://github.com/bujnlc8/phoner/releases/download/0.1.2/phoner_aarch64-apple-darwin.tar.gz.md5)
 
-- [⬇️ 点击下载 x86_64-unknown-linux-musl](https://github.com/bujnlc8/phoner/releases/download/0.1.1/phoner_x86_64-unknown-linux-musl.tar.gz)
+- [⬇️ 点击下载 x86_64-unknown-linux-musl](https://github.com/bujnlc8/phoner/releases/download/0.1.2/phoner_x86_64-unknown-linux-musl.tar.gz)
 
-  > [phoner_x86_64-unknown-linux-musl.tar.gz.md5](https://github.com/bujnlc8/phoner/releases/download/0.1.1/phoner_x86_64-unknown-linux-musl.tar.gz.md5)
+  > [phoner_x86_64-unknown-linux-musl.tar.gz.md5](https://github.com/bujnlc8/phoner/releases/download/0.1.2/phoner_x86_64-unknown-linux-musl.tar.gz.md5)
 
-- ~~[⬇️ 点击下载 x86_64-unknown-linux-gnu](https://github.com/bujnlc8/phoner/releases/download/0.1.1/phoner_x86_64-unknown-linux-gnu.tar.gz)~~
+- ~~[⬇️ 点击下载 x86_64-unknown-linux-gnu](https://github.com/bujnlc8/phoner/releases/download/0.1.2/phoner_x86_64-unknown-linux-gnu.tar.gz)~~
 
-  > ~~[phoner_x86_64-unknown-linux-gnu.tar.gz.md5](https://github.com/bujnlc8/phoner/releases/download/0.1.1/phoner_x86_64-unknown-linux-gnu.tar.gz.md5)~~
+  > ~~[phoner_x86_64-unknown-linux-gnu.tar.gz.md5](https://github.com/bujnlc8/phoner/releases/download/0.1.2/phoner_x86_64-unknown-linux-gnu.tar.gz.md5)~~
 
 请根据你的操作系统下载相应的版本，可对比 md5 hash 值确定是否下载了最新的版本
 
@@ -37,7 +37,7 @@ sudo spctl --master-disable
 ## 编译
 
 ```
-cargo build --release --locked
+cargo build --release --locked [--features download-progress]
 ```
 
 **如果在使用过程中发现 bug，欢迎反馈 👏**

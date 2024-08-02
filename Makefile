@@ -3,23 +3,23 @@ test:
 
 
 PLATFORMS:=x86_64-apple-darwin x86_64-unknown-linux-gnu x86_64-unknown-linux-musl aarch64-apple-darwin
-VERSION:=0.1.1
+VERSION:=0.1.2
 CLI:=phoner
 HOST_TRIPLE := $(shell rustc -vV | grep 'host:' | awk '{print $$2}')
 
 all: $(PLATFORMS)
 
 x86_64-apple-darwin:
-	cargo build --release --locked
+	cargo build --release --locked --features download-progress
 
 x86_64-unknown-linux-musl:
-	TARGET_CC=x86_64-linux-musl-cc cargo build --release --target x86_64-unknown-linux-musl --locked
+	TARGET_CC=x86_64-linux-musl-cc cargo build --release --target x86_64-unknown-linux-musl --locked --features download-progress
 
 x86_64-unknown-linux-gnu:
-	TARGET_CC=x86_64-linux-gnu-cc cargo build --release --target x86_64-unknown-linux-gnu --locked
+	TARGET_CC=x86_64-linux-gnu-cc cargo build --release --target x86_64-unknown-linux-gnu --locked --features download-progress
 
 aarch64-apple-darwin:
-	cargo build --release --target aarch64-apple-darwin --locked
+	cargo build --release --target aarch64-apple-darwin --locked --features download-progress
 
 artifacts:all
 	@mkdir -p artifacts/$(VERSION)
